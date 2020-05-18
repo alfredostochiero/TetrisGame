@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded',function(){
         var tag = document.createElement('div');
         var texto =  document.createTextNode('*');
         var element = document.getElementById('grid');
-        tag.appendChild(texto);
+        //tag.appendChild(texto);
         element.appendChild(tag);
     }
     
@@ -53,10 +53,27 @@ document.addEventListener('DOMContentLoaded',function(){
 
     const theTetrominoes = [LTetromino,zTetromino,tTetromino,oTetromino,iTetromino];
 
-    let currentPosition = 4
-    let current =  theTetrominoes[0][0]
+    // The current Position where the tetromino will appear
+    let currentPosition = Math.floor(Math.random()*6);
+    let rand4 = Math.floor(Math.random()*4);
+    let rand5 = Math.floor(Math.random()*5);
+    let current =  theTetrominoes[rand5][rand4];
 
-    // continue on 40:40 https://www.youtube.com/watch?v=rAUn1Lom6dw&t=21s
+   // draw the first rotation in the first tetromino
+
+   function drawn () {
+     current.forEach(index =>{
+       squares[currentPosition + index].classList.add('tetromino');
+     })
+   }
+
+   function undrawn() {
+     current.forEach(index=>{
+       squares[currentPosition + index].classList.remove('tetromino';)
+     })
+   }
+
+   drawn();
 
 
 
