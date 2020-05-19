@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded',function(){
     const StartBtn =  document.getElementById('start-button')
     const width = 10; // define a const that represents the width of the square
     let nextRandom = 0;
+    let timerId;
+    let score = 0;
+    colors = ['red','blue','orange','green','purple'];
     
     // The Forms AKA Tetrominoes
     // each item in the array represents the index of the div corresponding to the square that makes the Tetromino
@@ -91,16 +94,19 @@ document.addEventListener('DOMContentLoaded',function(){
    function drawn () {
      current.forEach(index =>{
        squares[currentPosition + index].classList.add('tetromino');
+       squares[currentPosition + index].style.backgroundColor =  colors[random]
      })
    }
 
    function undrawn() {
      current.forEach(index=>{
        squares[currentPosition + index].classList.remove('tetromino');
+       squares[currentPosition + index].style.backgroundColor = "";
+
      })
    }
    
-    // make the tetromino move down every second(1,000 milisecond)
+    // the harder the choice, the faster the tetromino will fall
     function dificulty(option){
       op = 1000;
       switch(option){
@@ -120,7 +126,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     }
 
-    timeId = setInterval(moveDown,dificulty('hard'));
+    //timerId = setInterval(moveDown,dificulty('hard'));
 
     // assign functions to keyCodes
     function control(e){
@@ -165,6 +171,8 @@ document.addEventListener('DOMContentLoaded',function(){
       currentPosition = 4
       drawn();
       displayShape();
+      addScore();
+      gameOver();
     }
   }
 
@@ -231,12 +239,57 @@ document.addEventListener('DOMContentLoaded',function(){
     //remove any frace of a tetromino from the entire grid
     displaySquares.forEach(square => {
       square.classList.remove('tetromino')
+      square.style.backgroundColor = '';
     })
     // add the tetromino to the mini grid
     upNextTetrominoes[nextRandom].forEach(index =>{
       displaySquares[displayIndex + index].classList.add('tetromino')
+      displaySquares[displayIndex + index].style.backgroundColor =  colors[nextRandom]
     })
 
+  }
+
+  // add functionality to the start/pause button
+  StartBtn.addEventListener('click',()=>{
+
+    if(timerId){
+      clearInterval(timerId)
+      timerId =  null
+    } else {
+      drawn()
+      timerId = setInterval(moveDown,dificulty('hard'));
+      nextRandom =  Math.floor(Math.random()*theTetrominoes.length)
+      displayShape()
+    }
+  })
+
+  function addScore () {
+    for(let i=0; i<199;i+=width){ // it will loop through every div in the grip checking row by row
+      const row =  [i,i+1,i+2,i+3,i+4,i+5,i+6,i+7,i+8,i+9]
+
+      if(row.every(index => squares[index].classList.contains('taken'))){ // if every div has the taken class, it will disaper and the score will go up
+        score += 10;
+        ScoreDisplay.innerHTML = score;
+        row.forEach(index => {
+          squares[index].classList.remove('taken')
+          squares[index].classList.remove('tetromino')
+          squares[index].style.backgroundColor = ''
+
+        })
+        const squaresRemoved =  squares.splice(i,width)
+        squares =  squaresRemoved.concat(squares)
+        squares.forEach(cell => grid.appendChild(cell))
+
+      }
+
+    }
+  }
+
+  function gameOver() {
+    if(current.some(index=>squares[currentPosition + index].classList.contains('taken'))) {
+      ScoreDisplay.innerHTML = 'Game Over'
+      clearInterval(timerId);
+    }
   }
    
 
