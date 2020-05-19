@@ -1,3 +1,10 @@
+function choose(){
+      const x = document.getElementById('dificulty');
+      const i =  x.selectedIndex;
+      return x.options[i].value;
+    }
+
+
 document.addEventListener('DOMContentLoaded',function(){
     
     // it creates the grids needed for the Tetris Game
@@ -38,6 +45,7 @@ document.addEventListener('DOMContentLoaded',function(){
     let squares =  Array.from(document.querySelectorAll('.grid div')); // getting all elements with class grid and converting it into an array
     const ScoreDisplay =  document.getElementById('score');
     const StartBtn =  document.getElementById('start-button')
+    const NewGame =  document.getElementById('newGame-button')
     const width = 10; // define a const that represents the width of the square
     let nextRandom = 0;
     let timerId;
@@ -89,12 +97,15 @@ document.addEventListener('DOMContentLoaded',function(){
     let random = Math.floor(Math.random()*5); // 5 being the number of Tetrominoes in the game
     let current =  theTetrominoes[random][currentRotation];
 
+    
+
    // draw the first rotation in the first tetromino
 
    function drawn () {
      current.forEach(index =>{
        squares[currentPosition + index].classList.add('tetromino');
-       squares[currentPosition + index].style.backgroundColor =  colors[random]
+       randomColor = Math.floor(Math.random()*5); // teste
+       squares[currentPosition + index].style.backgroundColor =  colors[randomColor]
      })
    }
 
@@ -111,7 +122,7 @@ document.addEventListener('DOMContentLoaded',function(){
       op = 1000;
       switch(option){
         case 'easy':
-        op = 1000
+        op = 900
         break;
 
         case 'medium':
@@ -206,14 +217,21 @@ document.addEventListener('DOMContentLoaded',function(){
   // rotate the tetromino
 
   function rotate() {
-    undrawn();
-    currentRotation++;
-    // if current rotation reaches the last one, it loops back to the first one
-    if(currentRotation === current.length){
-      currentRotation = 0
+
+    const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0);
+    const isAtRightEdge = current.some(index => (currentPosition + index) % width === (width - 1));  
+    if(!(isAtRightEdge || isAtLeftEdge)){
+      undrawn();
+      currentRotation++;
+      // if current rotation reaches the last one, it loops back to the first one
+      if(currentRotation === current.length){
+        currentRotation = 0
+      }
+      current =  theTetrominoes[random][currentRotation];
+      drawn()
+
     }
-    current =  theTetrominoes[random][currentRotation];
-    drawn()
+   
   }
 
   // show up next tetromino in mini-grid display
@@ -257,10 +275,15 @@ document.addEventListener('DOMContentLoaded',function(){
       timerId =  null
     } else {
       drawn()
-      timerId = setInterval(moveDown,dificulty('hard'));
+      timerId = setInterval(moveDown,dificulty(choose()));
       nextRandom =  Math.floor(Math.random()*theTetrominoes.length)
       displayShape()
     }
+  })
+  // add functionalit to the New Game Button
+  NewGame.addEventListener('click',()=>{
+    location.reload();
+    return false;
   })
 
   function addScore () {
