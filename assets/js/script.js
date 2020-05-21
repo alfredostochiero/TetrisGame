@@ -32,14 +32,6 @@ document.addEventListener('DOMContentLoaded',function(){
     for(let i=0;i<16;i++){
       createDiv('mini-grid')
     }
-
-
-
-    
-
-   
-
-    
     
     const grid =  document.querySelector('.grid'); // getting a single element with class grid
     let squares =  Array.from(document.querySelectorAll('.grid div')); // getting all elements with class grid and converting it into an array
@@ -50,7 +42,7 @@ document.addEventListener('DOMContentLoaded',function(){
     let nextRandom = 0;
     let timerId;
     let score = 0;
-    colors = ['red','blue','orange','green','purple'];
+    colors = ['red','blue','gray','green','purple'];
     
     // The Forms AKA Tetrominoes
     // each item in the array represents the index of the div corresponding to the square that makes the Tetromino
@@ -104,8 +96,8 @@ document.addEventListener('DOMContentLoaded',function(){
    function drawn () {
      current.forEach(index =>{
        squares[currentPosition + index].classList.add('tetromino');
-       randomColor = Math.floor(Math.random()*5); // teste
-       squares[currentPosition + index].style.backgroundColor =  colors[randomColor]
+       //randomColor = Math.floor(Math.random()*5); // teste
+       squares[currentPosition + index].style.backgroundColor =  colors[random]
      })
    }
 
@@ -153,6 +145,10 @@ document.addEventListener('DOMContentLoaded',function(){
 
         case 38:
         rotate()
+        break;
+
+        case 40:
+        moveDown()
         break;
       }
       
@@ -263,6 +259,7 @@ document.addEventListener('DOMContentLoaded',function(){
     upNextTetrominoes[nextRandom].forEach(index =>{
       displaySquares[displayIndex + index].classList.add('tetromino')
       displaySquares[displayIndex + index].style.backgroundColor =  colors[nextRandom]
+
     })
 
   }
