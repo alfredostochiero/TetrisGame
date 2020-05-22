@@ -114,14 +114,18 @@ document.addEventListener('DOMContentLoaded',function(){
       op = 1000;
       switch(option){
         case 'easy':
-        op = 900
+        op = 1000
         break;
 
         case 'medium':
-        op = 500
+        op = 600
         break
 
         case 'hard':
+        op = 300
+        break;
+
+        case 'Vhard':
         op = 200
         break;
       }
